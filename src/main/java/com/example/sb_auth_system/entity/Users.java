@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 @Entity
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +23,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(Integer id, String email, String password, Role role) {
+    public Users(Integer id, String email, String password, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public User() {
+    public Users() {
 
     }
 
