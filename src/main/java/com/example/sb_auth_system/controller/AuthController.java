@@ -18,6 +18,11 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Users user){
+        return  ResponseEntity.ok(authService.login(user));
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Users> register(@RequestBody Users user){
         return  ResponseEntity.ok(authService.register(user));
