@@ -19,23 +19,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
-    private final PasswordEncoder passwordEncoder;
-
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           AuthenticationProvider authProvider) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
+                .authenticationProvider(authProvider)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .authenticationProvider(authenticationProvider());
+                );
+
         return http.build();
     }
 
@@ -50,8 +45,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
+    public AuthenticationProvider authenticationProvider(
+            CustomUserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder
+    ) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
