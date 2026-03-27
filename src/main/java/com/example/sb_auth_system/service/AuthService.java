@@ -19,7 +19,15 @@ public class AuthService {
         this.userRepos = userRepos;
     }
 
-
+    public String checkUser(Users user){
+        Optional<Users> findUser = userRepos.findByEmail(user.getEmail());
+        if (findUser.isPresent()){
+            if(passwordEncoder.matches(user.getPassword(),findUser.get().getPassword())){
+                return "TOKEN ....";
+            }
+        }
+        return "User not found ! ";
+    }
 
     public Users saveUser(Users user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
