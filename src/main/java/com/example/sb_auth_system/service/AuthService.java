@@ -32,12 +32,12 @@ public class AuthService {
                 )
         );
 
-        return "User not found ! ";
+        return "LOGIN SUCCESS";
     }
 
     public Users register(Users user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.valueOf("USER"));
+        user.setRole(Role.USER);
         userRepos.save(user);
         return user;
     }
