@@ -23,3 +23,19 @@ This project demonstrates:
 It is intended to be reused as a **security foundation** in other Spring Boot applications.
 
 ---
+
+## ▶ How to Run the Project
+### 1. Clone the Repository
+```bash
+git clone https://github.com/abdellahchatioui/SpringBoot-Auth-System.git
+```
+```bash
+cd  SpringBoot-Auth-System
+```
+```bash
+mvn SpringBoot-Auth-System
+```
+### 2. Then open:
+```bash
+http://localhost:8080
+```
