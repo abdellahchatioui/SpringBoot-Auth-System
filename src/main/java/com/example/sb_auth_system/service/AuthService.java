@@ -35,7 +35,10 @@ public class AuthService {
                 )
         );
 
-        return jwtService.generateToken(user);
+        Users findUser = userRepos.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return jwtService.generateToken(findUser);
     }
 
     public Users register(Users user){
