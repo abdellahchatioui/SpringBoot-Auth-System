@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtService {
     private String SECRET_KEY = "5tLvdGu1dvmGOPpnyC8egHYWBvXo6excpSShNo7VO6O";
 
-    private Key getKey(){
+    private Key getSignInKey(){
         byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
         Key key = Keys.hmacShaKeyFor(keyBytes);
         return key;
@@ -28,7 +28,7 @@ public class JwtService {
                 .claims(user.getRole())
                 .issuedAt(new Date(System.currentTimeMillis() ))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getKey())
+                .signWith(getSignInKey())
                 .compact();
 
         return token;
@@ -36,7 +36,7 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return Jwts.parser()
-                .verifyWith((SecretKey) getKey()) // Required to verify the signature
+                .verifyWith((SecretKey) getSignInKey()) // Required to verify the signature
                 .build()
                 .parseSignedClaims(token)   // Handles signed tokens (JWS)
                 .getPayload()
