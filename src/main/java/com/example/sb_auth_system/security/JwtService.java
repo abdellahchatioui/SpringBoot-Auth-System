@@ -48,6 +48,9 @@ public class JwtService {
         return (email.equals(userDetails.getUsername()));
     }
 
+    private boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
     private Date extractExpiration(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) getSignInKey())
