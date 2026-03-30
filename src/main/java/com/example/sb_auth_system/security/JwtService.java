@@ -43,6 +43,9 @@ public class JwtService {
                 .getSubject();
     }
 
-
+    public boolean validateToken(String token , CustomUserDetails userDetails){
+        final String email = extractEmail(token);
+        return (email.equals(userDetails.getUsername()));
+    }
 
 }
