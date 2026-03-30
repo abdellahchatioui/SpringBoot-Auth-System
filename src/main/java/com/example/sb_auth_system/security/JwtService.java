@@ -48,4 +48,14 @@ public class JwtService {
         return (email.equals(userDetails.getUsername()));
     }
 
+    private Date extractExpiration(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+    }
+
+
 }
