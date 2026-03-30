@@ -1,8 +1,9 @@
 package com.example.sb_auth_system.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+
+import java.util.Map;
 
 @Entity
 public class Users {
@@ -57,7 +58,7 @@ public class Users {
         this.password = password;
     }
 
-    public Role getRole() {
+    public Map<String, ?> getRole() {
         return role;
     }
 
