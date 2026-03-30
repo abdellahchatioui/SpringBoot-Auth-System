@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     AuthService authService;
 
-    @GetMapping("/tet")
-    public String tet() {
+    @GetMapping("/test")
+    public String test() {
         return "WORKING";
     }
 

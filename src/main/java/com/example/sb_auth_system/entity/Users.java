@@ -14,7 +14,6 @@ public class Users {
     @Column(nullable = false,unique = true)
     private String email;
 
-    @JsonIgnore
     @Size(message = "min 4 word" , min = 4)
     @Column(nullable = false)
     private  String password;
