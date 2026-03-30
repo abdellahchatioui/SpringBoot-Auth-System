@@ -20,5 +20,18 @@ public class JwtService {
         return key;
     }
 
+    public  String generateToken(Users user){
+
+        String token = Jwts.builder()
+                .subject(user.getEmail())
+                .claims(user.getRole())
+                .issuedAt(new Date(System.currentTimeMillis() ))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getKey())
+                .compact();
+
+        return token;
+    }
+
 
 }
