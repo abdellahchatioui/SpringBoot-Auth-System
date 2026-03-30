@@ -58,7 +58,7 @@ public class Users {
         this.password = password;
     }
 
-    public Map<String, ?> getRole() {
+    public Role getRole() {
         return role;
     }
 
