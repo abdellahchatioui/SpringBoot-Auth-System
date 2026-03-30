@@ -3,6 +3,7 @@ package com.example.sb_auth_system.security;
 import com.example.sb_auth_system.entity.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -11,27 +12,26 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+@Service
 public class JwtService {
     private String SECRET_KEY = "5tLvdGu1dvmGOPpnyC8egHYWBvXo6excpSShNo7VO6O";
+    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
 
     private Key getSignInKey(){
-        byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
-        return key;
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public  String generateToken(Users user){
-
-        String token = Jwts.builder()
+    public String generateToken(Users user){
+        return Jwts.builder()
                 .subject(user.getEmail())
                 .claim("role", user.getRole().name())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(getSignInKey())
                 .compact();
-
-        return token;
     }
 
     public String extractEmail(String token) {
@@ -59,6 +59,5 @@ public class JwtService {
                 .getPayload()
                 .getExpiration();
     }
-
 
 }
