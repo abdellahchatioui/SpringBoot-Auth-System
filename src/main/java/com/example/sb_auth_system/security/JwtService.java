@@ -4,6 +4,7 @@ import com.example.sb_auth_system.entity.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.LocalDate;
@@ -32,6 +33,16 @@ public class JwtService {
 
         return token;
     }
+
+    public String extractEmail(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) getKey()) // Required to verify the signature
+                .build()
+                .parseSignedClaims(token)   // Handles signed tokens (JWS)
+                .getPayload()
+                .getSubject();
+    }
+
 
 
 }
