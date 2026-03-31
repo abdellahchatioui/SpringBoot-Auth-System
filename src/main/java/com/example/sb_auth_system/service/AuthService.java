@@ -42,12 +42,10 @@ public class AuthService {
     }
 
     public Users register(Users user){
-        System.out.println("pass : " + user.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         userRepos.save(user);
         return user;
     }
-
 
 }
