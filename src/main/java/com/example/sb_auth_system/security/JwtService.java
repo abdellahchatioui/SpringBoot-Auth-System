@@ -6,14 +6,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class JwtService {
@@ -43,9 +37,9 @@ public class JwtService {
                 .getSubject();
     }
 
-    public boolean validateToken(String token , CustomUserDetails userDetails){
+    public boolean validateToken(String token , Users userDetails){
         final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token){
