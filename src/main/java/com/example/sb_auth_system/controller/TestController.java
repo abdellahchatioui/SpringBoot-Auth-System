@@ -14,7 +14,7 @@ public class TestController {
         return "ADMIN PAGE";
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/user")
     public String userPage() {
         return "USER PAGE";
