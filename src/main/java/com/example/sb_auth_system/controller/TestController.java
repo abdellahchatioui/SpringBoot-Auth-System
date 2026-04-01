@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin")
+    public String adminPage() {
+        return "ADMIN PAGE";
+    }
+
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/users")
-    public String users(){
-        return "SECURED DATA";
+    @GetMapping("/user")
+    public String userPage() {
+        return "USER PAGE";
     }
 
     @GetMapping("/test")

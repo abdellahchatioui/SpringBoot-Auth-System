@@ -41,13 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         JWTtoken = authHeader.substring(7);
         userEmail = jwtService.extractEmail(JWTtoken);
-
-
-
+        
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            Users user = userRepos.findByEmail(userEmail)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
             if(jwtService.validateToken(JWTtoken,userDetails)){
@@ -59,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("User Authorities: " + authToken.getAuthorities());
             }
         }
         filterChain.doFilter(request,response);
