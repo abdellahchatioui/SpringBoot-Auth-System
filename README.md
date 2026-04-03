@@ -64,7 +64,12 @@ POST /auth/login
   "password": "password123"
 }
 ```
-Returns a JWT token to use in subsequent requests.
+---
+## Testing with Postman
+
+1. Call `/auth/login` and copy the token from the response
+2. In Postman, go to **Authorization** → select **Bearer Token**
+3. Paste the token and send the request
 ---
 
 ## 👨‍💻 Author
