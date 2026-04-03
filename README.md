@@ -36,6 +36,37 @@ mvn spring-boot:run
 
 ---
 
+## API Endpoints
+
+| Method | Endpoint | Access |
+|---|---|---|
+| `POST` | `/auth/register` | Public |
+| `POST` | `/auth/login` | Public |
+| `GET` | `/user` | USER, ADMIN |
+| `GET` | `/admin` | ADMIN only |
+| `GET` | `/auth/test` | ADMIN only |
+
+### Register
+```json
+POST /auth/register
+{
+  "username": "john",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Login
+```json
+POST /auth/login
+{
+  "username": "john",
+  "password": "password123"
+}
+```
+Returns a JWT token to use in subsequent requests.
+---
+
 ## 👨‍💻 Author
 
 **Abdellah Chatioui** *Fullstack Developer*
