@@ -7,19 +7,14 @@
 A reusable authentication system built with Spring Boot and JWT. Handles user registration, login, and role-based access control with stateless security.
 
 ---
-## 🎯 Project Purpose
+## Features
 
-This project demonstrates:
-
-- Stateless authentication using JWT
-- Role-based authorization (USER / ADMIN)
-- Clean architecture with DTO separation
-- Custom `UserDetails` implementation
-- Integration with PostgreSQL
-- Production-oriented Spring Security configuration
-
-It is intended to be reused as a **security foundation** in other Spring Boot applications.
-
+- User registration and login
+- Password hashing with BCrypt
+- JWT token generation and validation
+- Stateless authentication (no sessions)
+- Role-based authorization (`USER` / `ADMIN`)
+- Role hierarchy: `ADMIN > USER`
 ---
 
 ## ▶ How to Run the Project
