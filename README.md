@@ -6,32 +6,34 @@
 
 A reusable authentication system built with Spring Boot and JWT. Handles user registration, login, and role-based access control with stateless security.
 
----
-## Features
+## Setup
 
-- User registration and login
-- Password hashing with BCrypt
-- JWT token generation and validation
-- Stateless authentication (no sessions)
-- Role-based authorization (`USER` / `ADMIN`)
-- Role hierarchy: `ADMIN > USER`
----
-
-## ▶ How to Run the Project
-### 1. Clone the Repository
+**1. Clone the repository**
 ```bash
 git clone https://github.com/abdellahchatioui/SpringBoot-Auth-System.git
+cd SpringBoot-Auth-System
 ```
+
+**2. Create the database**
+```sql
+CREATE DATABASE jwt_auth_db;
+```
+
+**3. Configure `application.properties`**
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/jwt_auth_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+jwt.secret=your_secret_key_min_32_characters
+jwt.expiration=86400000
+```
+
+**4. Run the application**
 ```bash
-cd  SpringBoot-Auth-System
+mvn spring-boot:run
 ```
-```bash
-mvn SpringBoot-Auth-System
-```
-### 2. Then open:
-```bash
-http://localhost:8080
-```
+
 ---
 
 ## 👨‍💻 Author
