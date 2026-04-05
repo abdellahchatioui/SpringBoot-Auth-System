@@ -1,9 +1,12 @@
 package com.example.sb_auth_system.service;
 
+import com.example.sb_auth_system.dto.JwtResponse;
+import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +17,8 @@ import java.util.Optional;
 @Service
 public class AuthService {
 
+    @Autowired
+    private RefreshTokenService  refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepos;
@@ -26,7 +31,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public String login(Users user){
+    public JwtResponse login(Users user){
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -38,7 +43,9 @@ public class AuthService {
         Users findUser = userRepos.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return jwtService.generateToken(findUser);
+        String accessToken = jwtService.generateToken(findUser);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(findUser);
+        return new JwtResponse(accessToken,refreshToken.getToken());
     }
 
     public Users register(Users user){

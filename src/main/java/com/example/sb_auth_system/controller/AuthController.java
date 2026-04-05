@@ -1,5 +1,6 @@
 package com.example.sb_auth_system.controller;
 
+import com.example.sb_auth_system.dto.JwtResponse;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Users user){
+    public ResponseEntity<JwtResponse> login(@RequestBody Users user){
         return  ResponseEntity.ok(authService.login(user));
     }
 
