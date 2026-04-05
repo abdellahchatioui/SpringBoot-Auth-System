@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class RefreshTokenService {
 
-    private Long refreshTokenDurationMs = 604800000L;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
@@ -24,8 +24,10 @@ public class RefreshTokenService {
     public RefreshToken createRefreshToken(Users user){
         RefreshToken refreshToken = new RefreshToken();
 
-        refreshToken.setUser(userRepository.findById(user.getId()));
-        refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenDurationMs));
+        refreshToken.setUser(user);
+        refreshToken.setExpiryDate(
+                Instant.now().plus(7, ChronoUnit.DAYS)
+        );
         refreshToken.setToken(UUID.randomUUID().toString());
 
         return refreshTokenRepository.save(refreshToken);
