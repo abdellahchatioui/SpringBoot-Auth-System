@@ -4,6 +4,7 @@ import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.RefreshTokenRepository;
 import com.example.sb_auth_system.repository.UserRepository;
+import com.example.sb_auth_system.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,9 @@ public class RefreshTokenService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    JwtService  jwtService;
 
     public RefreshToken createRefreshToken(Users user){
         RefreshToken refreshToken = new RefreshToken();
@@ -46,9 +50,16 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyAndGetToken(String token) {
-        RefreshToken refToken = refreshTokenRepository.findByToken(token)
+        return refreshTokenRepository.findByToken(token)
                 .map(this::verifyExpiration)
-                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
-        return  refToken;
+                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
+
+    public String generateNewAccessToken(String refreshTokenString) {
+        RefreshToken refreshToken = verifyAndGetToken(refreshTokenString);
+        Users user = refreshToken.getUser();
+
+        return jwtService.generateToken(user);
+    }
+
 }
