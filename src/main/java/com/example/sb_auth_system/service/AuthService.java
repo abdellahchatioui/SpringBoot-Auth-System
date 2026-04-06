@@ -54,5 +54,4 @@ public class AuthService {
         userRepos.save(user);
         return user;
     }
-
 }
