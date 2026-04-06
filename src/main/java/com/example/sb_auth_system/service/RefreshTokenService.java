@@ -44,4 +44,11 @@ public class RefreshTokenService {
        }
        return token;
     }
+
+    public RefreshToken verifyAndGetToken(String token) {
+        RefreshToken refToken = refreshTokenRepository.findByToken(token)
+                .map(this::verifyExpiration)
+                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+        return  refToken;
+    }
 }
