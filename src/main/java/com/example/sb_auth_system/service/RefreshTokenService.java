@@ -46,9 +46,9 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyAndGetToken(String token) {
-        RefreshToken refToken = refreshTokenRepository.findByToken(token)
-                .map(this::verifyExpiration)
-                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
-        return  refToken;
+        return refreshTokenRepository.findByToken(token)
+                .map(this::verifyExpiration) // Logic: Check if past expiryDate
+                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
     }
+
 }
