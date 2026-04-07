@@ -1,6 +1,7 @@
 package com.example.sb_auth_system.service;
 
 import com.example.sb_auth_system.dto.JwtResponse;
+import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
@@ -53,5 +54,19 @@ public class AuthService {
         user.setRole(Role.USER);
         userRepos.save(user);
         return user;
+    }
+
+    public JwtResponse refresh(RefreshTokenRequest request) {
+
+        RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+
+        refreshTokenService.verifyExpiration(refreshToken);
+
+        Users user = refreshToken.getUser();
+
+        String newAccessToken = jwtService.generateToken(user);
+
+        return new JwtResponse(newAccessToken, refreshToken.getToken());
     }
 }
