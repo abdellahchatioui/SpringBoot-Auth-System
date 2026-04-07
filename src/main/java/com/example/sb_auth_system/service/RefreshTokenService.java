@@ -1,5 +1,7 @@
 package com.example.sb_auth_system.service;
 
+import com.example.sb_auth_system.dto.JwtResponse;
+import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.RefreshTokenRepository;
@@ -44,22 +46,11 @@ public class RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token){
        if(token.getExpiryDate().isBefore(Instant.now())){
            refreshTokenRepository.deleteByToken(token.getToken());
-           throw new RuntimeException("Refresh token was expired. Please make a new signin request");
+           throw new RuntimeException("Refresh token was expired. Please make a new signing request");
        }
        return token;
     }
 
-    public RefreshToken verifyAndGetToken(String token) {
-        return refreshTokenRepository.findByToken(token)
-                .map(this::verifyExpiration)
-                .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
-    }
 
-    public String generateNewAccessToken(String refreshTokenString) {
-        RefreshToken refreshToken = verifyAndGetToken(refreshTokenString);
-        Users user = refreshToken.getUser();
-
-        return jwtService.generateToken(user);
-    }
 
 }
