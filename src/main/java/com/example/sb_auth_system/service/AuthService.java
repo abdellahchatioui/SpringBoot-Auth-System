@@ -4,7 +4,9 @@ import com.example.sb_auth_system.dto.JwtResponse;
 import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
+import com.example.sb_auth_system.entity.TokenBlacklist;
 import com.example.sb_auth_system.entity.Users;
+import com.example.sb_auth_system.repository.TokenBlacklistRepository;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class AuthService {
 
     @Autowired
     private RefreshTokenService  refreshTokenService;
+    @Autowired
+    private TokenBlacklistRepository tokenBlacklistRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepos;
@@ -68,5 +73,18 @@ public class AuthService {
         String newAccessToken = jwtService.generateToken(user);
 
         return new JwtResponse(newAccessToken, refreshToken.getToken());
+    }
+
+    public String logout(String authHeder) {
+        if(authHeder == null || !authHeder.startsWith("Bearer ")){
+            return "Invalid Token";
+        }
+
+        String token = authHeder.substring(7);
+        TokenBlacklist blockToken = new TokenBlacklist();
+        blockToken.setToken(token);
+        tokenBlacklistRepository.save(blockToken);
+
+        return "Logged out successfully";
     }
 }
