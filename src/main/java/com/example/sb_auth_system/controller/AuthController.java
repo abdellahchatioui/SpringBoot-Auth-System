@@ -35,6 +35,11 @@ public class AuthController {
         return  ResponseEntity.ok(authService.register(user));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeder){
+        return  ResponseEntity.ok(authService.logout(authHeder));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refresh(request));
