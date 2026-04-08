@@ -3,6 +3,8 @@ package com.example.sb_auth_system.security;
 import com.example.sb_auth_system.entity.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,11 @@ import java.util.Date;
 
 @Service
 public class JwtService {
-    private String SECRET_KEY = "xZPj3dQBo7ZTKy8RChcqFizmnWQVfv9vdVJhIaBcYDWjIqSwkZ49LC2VBa15b7CqWawqmlC55FjwPI7g5T8sYN";
-    private static final long EXPIRATION = 1000 * 60 * 60 * 24;
+    @Value("${app.jwt.secret}")
+    private String SECRET_KEY;
+
+    @Value("${app.jwt.expiration-ms}")
+    private long EXPIRATION;
 
     private Key getSignInKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
