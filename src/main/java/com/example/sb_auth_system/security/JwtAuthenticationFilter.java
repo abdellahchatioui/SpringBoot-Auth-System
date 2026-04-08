@@ -1,6 +1,7 @@
 package com.example.sb_auth_system.security;
 
 import com.example.sb_auth_system.entity.Users;
+import com.example.sb_auth_system.repository.TokenBlacklistRepository;
 import com.example.sb_auth_system.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,11 +23,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserRepository userRepos;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenBlacklistRepository tokenBlacklistRepository;
 
-    public JwtAuthenticationFilter(UserRepository userRepos, JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(UserRepository userRepos, JwtService jwtService, UserDetailsService userDetailsService, TokenBlacklistRepository tokenBlacklistRepository) {
         this.userRepos = userRepos;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.tokenBlacklistRepository = tokenBlacklistRepository;
     }
 
     @Override
@@ -39,7 +42,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
             return;
         }
+
         JWTtoken = authHeader.substring(7);
+
+        if(tokenBlacklistRepository.existsByToken(JWTtoken)){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         userEmail = jwtService.extractEmail(JWTtoken);
         
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
