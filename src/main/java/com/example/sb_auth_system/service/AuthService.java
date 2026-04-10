@@ -23,7 +23,7 @@ public class AuthService {
     @Autowired
     private RefreshTokenService  refreshTokenService;
     @Autowired
-    private TokenBlacklistRepository tokenBlacklistRepository;
+    private TokenBlacklistService tokenBlacklistService;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -75,15 +75,17 @@ public class AuthService {
         return new JwtResponse(newAccessToken, refreshToken.getToken());
     }
 
-    public String logout(String authHeder) {
-        if(authHeder == null || !authHeder.startsWith("Bearer ")){
-            return "Invalid Token";
+    public String logout(String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return "Invalid token";
         }
 
-        String token = authHeder.substring(7);
-        TokenBlacklist blockToken = new TokenBlacklist();
-        blockToken.setToken(token);
-        tokenBlacklistRepository.save(blockToken);
+        String token = authHeader.substring(7);
+
+        long expiration = jwtService.getExpirationTime(token);
+
+        tokenBlacklistService.blacklistToken(token, expiration);
 
         return "Logged out successfully";
     }
