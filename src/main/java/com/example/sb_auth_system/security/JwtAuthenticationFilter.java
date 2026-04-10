@@ -22,12 +22,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     TokenBlacklistService tokenBlacklistService;
 
-    private final UserRepository userRepos;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(UserRepository userRepos, JwtService jwtService, UserDetailsService userDetailsService ) {
-        this.userRepos = userRepos;
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }

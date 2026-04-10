@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
 
-    private Users users;
+    private final Users users;
 
     public CustomUserDetails(Users users) {
         this.users = users;
