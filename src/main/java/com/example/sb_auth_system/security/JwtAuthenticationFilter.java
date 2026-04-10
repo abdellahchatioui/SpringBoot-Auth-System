@@ -1,7 +1,5 @@
 package com.example.sb_auth_system.security;
 
-import com.example.sb_auth_system.entity.Users;
-import com.example.sb_auth_system.repository.TokenBlacklistRepository;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.service.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
@@ -18,23 +16,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     TokenBlacklistService tokenBlacklistService;
 
-    private final UserRepository userRepos;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenBlacklistRepository tokenBlacklistRepository;
 
-    public JwtAuthenticationFilter(UserRepository userRepos, JwtService jwtService, UserDetailsService userDetailsService, TokenBlacklistRepository tokenBlacklistRepository) {
-        this.userRepos = userRepos;
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.tokenBlacklistRepository = tokenBlacklistRepository;
     }
 
     @Override

@@ -39,9 +39,9 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return Jwts.parser()
-                .verifyWith((SecretKey) getSignInKey()) // Required to verify the signature
+                .verifyWith((SecretKey) getSignInKey())
                 .build()
-                .parseSignedClaims(token)   // Handles signed tokens (JWS)
+                .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
     }

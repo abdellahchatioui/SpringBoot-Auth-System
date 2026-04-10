@@ -1,6 +1,5 @@
 package com.example.sb_auth_system.service;
 
-import com.example.sb_auth_system.repository.TokenBlacklistRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
