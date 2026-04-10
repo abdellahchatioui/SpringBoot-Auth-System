@@ -4,9 +4,7 @@ import com.example.sb_auth_system.dto.JwtResponse;
 import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
-import com.example.sb_auth_system.entity.TokenBlacklist;
 import com.example.sb_auth_system.entity.Users;
-import com.example.sb_auth_system.repository.TokenBlacklistRepository;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {
