@@ -45,6 +45,8 @@ public class AuthService {
         Users findUser = userRepos.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        refreshTokenService.deleteByUser(findUser);
+
         String accessToken = jwtService.generateToken(findUser);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(findUser);
         return new JwtResponse(accessToken,refreshToken.getToken());
