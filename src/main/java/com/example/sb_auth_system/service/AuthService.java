@@ -7,6 +7,7 @@ import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
+    @Transactional
     public JwtResponse login(Users user){
 
         authenticationManager.authenticate(
