@@ -43,6 +43,8 @@ public class RefreshTokenService {
        return token;
     }
 
-
+    public void deleteByUser(Users user){
+        refreshTokenRepository.deleteByUser(user);
+    }
 
 }
