@@ -59,18 +59,23 @@ public class AuthService {
         return user;
     }
 
+    @Transactional
     public JwtResponse refresh(RefreshTokenRequest request) {
 
-        RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+        RefreshToken oldRefreshToken = refreshTokenService.findByToken(request.getRefreshToken())
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
-        refreshTokenService.verifyExpiration(refreshToken);
+        refreshTokenService.verifyExpiration(oldRefreshToken);
 
-        Users user = refreshToken.getUser();
+        Users user = oldRefreshToken.getUser();
+
+        refreshTokenService.deleteByUser(user);
+
+        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
 
         String newAccessToken = jwtService.generateToken(user);
 
-        return new JwtResponse(newAccessToken, refreshToken.getToken());
+        return new JwtResponse(newAccessToken, newRefreshToken.getToken());
     }
 
     public String logout(String authHeader) {
