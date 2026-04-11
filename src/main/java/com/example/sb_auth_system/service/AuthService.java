@@ -7,6 +7,7 @@ import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
+    @Transactional
     public JwtResponse login(Users user){
 
         authenticationManager.authenticate(
@@ -44,6 +46,8 @@ public class AuthService {
 
         Users findUser = userRepos.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        refreshTokenService.deleteByUser(findUser);
 
         String accessToken = jwtService.generateToken(findUser);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(findUser);
@@ -57,18 +61,23 @@ public class AuthService {
         return user;
     }
 
+    @Transactional
     public JwtResponse refresh(RefreshTokenRequest request) {
 
-        RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+        RefreshToken oldRefreshToken = refreshTokenService.findByToken(request.getRefreshToken())
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
-        refreshTokenService.verifyExpiration(refreshToken);
+        refreshTokenService.verifyExpiration(oldRefreshToken);
 
-        Users user = refreshToken.getUser();
+        Users user = oldRefreshToken.getUser();
+
+        refreshTokenService.deleteByUser(user);
+
+        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
 
         String newAccessToken = jwtService.generateToken(user);
 
-        return new JwtResponse(newAccessToken, refreshToken.getToken());
+        return new JwtResponse(newAccessToken, newRefreshToken.getToken());
     }
 
     public String logout(String authHeader) {
