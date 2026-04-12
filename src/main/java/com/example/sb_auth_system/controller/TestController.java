@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('DELETE_USER')")
     @GetMapping("/admin")
     public String adminPage() {
         return "ADMIN PAGE";
     }
 
-    @PreAuthorize("hasRole('USER')")
+    // @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('READ_USER')")
     @GetMapping("/user")
     public String userPage() {
         return "USER PAGE";
