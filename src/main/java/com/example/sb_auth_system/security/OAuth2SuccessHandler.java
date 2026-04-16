@@ -35,7 +35,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         String email = (String) attributes.get("email");
 
-        // 🔥 Find or create user
         Users user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
                     Users newUser = new Users();
@@ -45,10 +44,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     return userRepository.save(newUser);
                 });
 
-        // 🔥 Generate JWT
         String jwt = jwtService.generateToken(user);
 
-        // 🔥 Return token
         response.setContentType("application/json");
         response.getWriter().write("{\"token\": \"" + jwt + "\"}");
         response.getWriter().flush();
