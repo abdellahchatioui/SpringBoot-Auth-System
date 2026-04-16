@@ -2,6 +2,8 @@ package com.example.sb_auth_system.config;
 
 import com.example.sb_auth_system.security.CustomUserDetailsService;
 import com.example.sb_auth_system.security.JwtAuthenticationFilter;
+import com.example.sb_auth_system.security.OAuth2SuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
@@ -19,6 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -27,11 +30,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    @Autowired
+    JwtAuthenticationFilter jwtAuthFilter;
+    @Autowired
+    OAuth2SuccessHandler successHandler;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -45,16 +48,19 @@ public class SecurityConfig {
                 )
 
                 .authenticationProvider(authProvider)
-
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**","/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth -> oauth
+                        .successHandler(successHandler)
+                );
 
         return http.build();
     }
+
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
