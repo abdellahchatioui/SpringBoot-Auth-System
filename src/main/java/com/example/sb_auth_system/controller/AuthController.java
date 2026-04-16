@@ -25,6 +25,7 @@ public class AuthController {
         return "WORKING";
     }
 
+    // http://localhost:8080/oauth2/authorization/google
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody Users user){
         return  ResponseEntity.ok(authService.login(user));
