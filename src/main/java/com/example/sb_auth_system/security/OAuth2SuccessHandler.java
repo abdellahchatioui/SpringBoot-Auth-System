@@ -35,20 +35,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         String email = (String) attributes.get("email");
 
-        // 🔥 Find or create user
         Users user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
                     Users newUser = new Users();
                     newUser.setEmail(email);
-                    newUser.setPassword(""); // no password
+                    newUser.setPassword("Oauth2"); // use a simple password just to pass the min length
                     newUser.setRole(Role.USER);
                     return userRepository.save(newUser);
                 });
 
-        // 🔥 Generate JWT
         String jwt = jwtService.generateToken(user);
 
-        // 🔥 Return token
         response.setContentType("application/json");
         response.getWriter().write("{\"token\": \"" + jwt + "\"}");
         response.getWriter().flush();
