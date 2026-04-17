@@ -39,7 +39,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .orElseGet(() -> {
                     Users newUser = new Users();
                     newUser.setEmail(email);
-                    newUser.setPassword(""); // no password
+                    newUser.setPassword("Oauth2"); // use a simple password just to pass the min length
                     newUser.setRole(Role.USER);
                     return userRepository.save(newUser);
                 });
