@@ -6,6 +6,7 @@ import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.service.AuthService;
 import com.example.sb_auth_system.service.RefreshTokenService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class AuthController {
         return "WORKING";
     }
 
-    // http://localhost:8080/oauth2/authorization/google
+    @Operation(summary = "Login user", description = "Authenticate user and return tokens")
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody Users user){
         return  ResponseEntity.ok(authService.login(user));
