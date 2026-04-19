@@ -3,6 +3,7 @@ package com.example.sb_auth_system.config;
 import com.example.sb_auth_system.security.CustomUserDetailsService;
 import com.example.sb_auth_system.security.JwtAuthenticationFilter;
 import com.example.sb_auth_system.security.OAuth2SuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,6 +60,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Not Found");
+                        })
+                )
                 .oauth2Login(oauth ->
                         oauth .successHandler(successHandler)
                 );
