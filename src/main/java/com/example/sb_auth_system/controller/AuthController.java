@@ -6,6 +6,7 @@ import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.service.AuthService;
 import com.example.sb_auth_system.service.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +37,11 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(user, response));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Users> register(@RequestBody Users user){
-        return  ResponseEntity.ok(authService.register(user));
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponse> refreshToken(HttpServletRequest request,
+                                                    HttpServletResponse response) {
+
+        return ResponseEntity.ok(authService.refresh(request, response));
     }
 
     @GetMapping("/oauth2/google")
@@ -51,9 +54,5 @@ public class AuthController {
         return  ResponseEntity.ok(authService.logout(authHeder));
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<JwtResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refresh(request));
-    }
 
 }
