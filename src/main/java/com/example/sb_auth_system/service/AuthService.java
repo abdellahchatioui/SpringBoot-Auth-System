@@ -8,6 +8,7 @@ import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Service
 public class AuthService {
@@ -72,22 +75,37 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtResponse refresh(RefreshTokenRequest request) {
+    public JwtResponse refresh(HttpServletRequest request,
+                               HttpServletResponse response) {
 
-        RefreshToken oldRefreshToken = refreshTokenService.findByToken(request.getRefreshToken())
+        String refreshToken = Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("refreshToken"))
+                .findFirst()
+                .map(Cookie::getValue)
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
-        refreshTokenService.verifyExpiration(oldRefreshToken);
+        RefreshToken token = refreshTokenService.verifyExpiration(
+                refreshTokenService.findByToken(refreshToken)
+                        .orElseThrow(() -> new RuntimeException("Invalid refresh token"))
+        );
 
-        Users user = oldRefreshToken.getUser();
+        Users user = token.getUser();
 
+        // 🔁 ROTATION
         refreshTokenService.deleteByUser(user);
-
         RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
 
         String newAccessToken = jwtService.generateToken(user);
 
-        return new JwtResponse(newAccessToken, newRefreshToken.getToken());
+        Cookie cookie = new Cookie("refreshToken", newRefreshToken.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+
+        response.addCookie(cookie);
+
+        return new JwtResponse(newAccessToken);
     }
 
     public String logout(String authHeader) {
