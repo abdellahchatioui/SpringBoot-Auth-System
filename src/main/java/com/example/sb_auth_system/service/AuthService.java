@@ -7,6 +7,8 @@ import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +37,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtResponse login(Users user){
+    public JwtResponse login(Users user , HttpServletResponse response){
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -47,11 +49,19 @@ public class AuthService {
         Users findUser = userRepos.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        refreshTokenService.deleteByUser(findUser);
+        // refreshTokenService.deleteByUser(findUser);
 
         String accessToken = jwtService.generateToken(findUser);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(findUser);
-        return new JwtResponse(accessToken,refreshToken.getToken());
+
+        Cookie cookie = new Cookie("refreshToken", refreshToken.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // true in production
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+
+        response.addCookie(cookie);
+        return new JwtResponse(accessToken);
     }
 
     public Users register(Users user){
