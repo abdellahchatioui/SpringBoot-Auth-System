@@ -2,11 +2,10 @@ package com.example.sb_auth_system.dto;
 
 public class JwtResponse {
     private String accessToken;
-    private String refreshToken;
 
-    public JwtResponse(String accessToken, String refreshToken) {
+    public JwtResponse(String accessToken) {
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+
     }
 
     public String getAccessToken() {
@@ -16,14 +15,5 @@ public class JwtResponse {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
 
 }
