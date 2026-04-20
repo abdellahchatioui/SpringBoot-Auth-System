@@ -2,6 +2,7 @@ package com.example.sb_auth_system.repository;
 
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,8 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken,Long>
 
     List<RefreshToken> findAllByUser(Users user);
 
+    @Modifying
+    @Transactional
     void deleteByToken(String token);
 
     @Modifying

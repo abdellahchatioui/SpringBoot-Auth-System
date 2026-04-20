@@ -4,6 +4,7 @@ import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.RefreshTokenRepository;
 import com.example.sb_auth_system.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,11 @@ public class RefreshTokenService {
 
     public void deleteByUser(Users user){
         refreshTokenRepository.deleteByUser(user);
+    }
+
+    @Transactional
+    public void deleteByToken(String token) {
+        refreshTokenRepository.deleteByToken(token);
     }
 
 }

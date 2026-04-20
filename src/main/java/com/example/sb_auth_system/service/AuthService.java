@@ -91,7 +91,6 @@ public class AuthService {
 
         Users user = token.getUser();
 
-        // 🔁 ROTATION
         refreshTokenService.deleteByUser(user);
         RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
 
@@ -108,18 +107,27 @@ public class AuthService {
         return new JwtResponse(newAccessToken);
     }
 
-    public String logout(String authHeader) {
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return "Invalid token";
+        String refreshToken = Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("refreshToken"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
+
+        if (refreshToken != null) {
+            refreshTokenService.deleteByToken(refreshToken);
         }
 
-        String token = authHeader.substring(7);
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
 
-        long expiration = jwtService.getExpirationTime(token);
+        response.addCookie(cookie);
 
-        tokenBlacklistService.blacklistToken(token, expiration);
-
-        return "Logged out successfully";
+        return "Logged out";
     }
+
 }
