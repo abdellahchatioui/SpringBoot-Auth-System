@@ -30,8 +30,10 @@ public class AuthController {
 
     @Operation(summary = "Login user", description = "Authenticate user and return tokens")
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody Users user){
-        return  ResponseEntity.ok(authService.login(user));
+    public ResponseEntity<JwtResponse> login(@RequestBody Users user,
+                                             HttpServletResponse response) {
+
+        return ResponseEntity.ok(authService.login(user, response));
     }
 
     @PostMapping("/register")
