@@ -110,6 +110,16 @@ public class AuthService {
     public String logout(HttpServletRequest request,
                          HttpServletResponse response) {
 
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String accessToken = authHeader.substring(7);
+
+            long expiration = jwtService.getExpirationTime(accessToken);
+
+            tokenBlacklistService.blacklistToken(accessToken, expiration);
+        }
+
         String refreshToken = Arrays.stream(request.getCookies())
                 .filter(c -> c.getName().equals("refreshToken"))
                 .findFirst()
@@ -129,5 +139,4 @@ public class AuthService {
 
         return "Logged out";
     }
-
 }
