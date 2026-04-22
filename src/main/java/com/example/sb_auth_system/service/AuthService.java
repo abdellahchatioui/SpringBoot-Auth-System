@@ -5,6 +5,7 @@ import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
+import com.example.sb_auth_system.exception.ResourceNotFoundException;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -50,7 +51,7 @@ public class AuthService {
         );
 
         Users findUser = userRepos.findByEmail(user.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         // refreshTokenService.deleteByUser(findUser);
 
@@ -82,11 +83,11 @@ public class AuthService {
                 .filter(c -> c.getName().equals("refreshToken"))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Refresh token not found"));
 
         RefreshToken token = refreshTokenService.verifyExpiration(
                 refreshTokenService.findByToken(refreshToken)
-                        .orElseThrow(() -> new RuntimeException("Invalid refresh token"))
+                        .orElseThrow(() -> new ResourceNotFoundException("Invalid refresh token"))
         );
 
         Users user = token.getUser();
