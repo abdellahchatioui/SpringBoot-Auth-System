@@ -1,20 +1,44 @@
 package com.example.sb_auth_system.exception;
 
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+
 import java.util.HashMap;
+
 import java.util.Map;
 
 @RestControllerAdvice
+
 public class GlobalExceptionHandler {
+
+    // NOT FOUND
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+
+    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
+
+        Map<String, Object> error = new HashMap<>();
+
+        error.put("timestamp", LocalDateTime.now());
+
+        error.put("message", ex.getMessage());
+
+        error.put("status", HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+
+    }
+
+    // BAD REQUEST
 
     @ExceptionHandler(RuntimeException.class)
 
-    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<?> handleRuntime(RuntimeException ex) {
 
         Map<String, Object> error = new HashMap<>();
 
@@ -28,9 +52,11 @@ public class GlobalExceptionHandler {
 
     }
 
+    // INTERNAL ERROR
+
     @ExceptionHandler(Exception.class)
 
-    public ResponseEntity<?> handleGeneralException(Exception ex) {
+    public ResponseEntity<?> handleGeneral(Exception ex) {
 
         Map<String, Object> error = new HashMap<>();
 
