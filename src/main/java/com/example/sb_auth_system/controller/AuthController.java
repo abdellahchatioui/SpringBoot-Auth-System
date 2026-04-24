@@ -37,6 +37,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(user, response));
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<Users> register(@RequestBody Users user) {
+
+        Users registeredUser = authService.register(user);
+
+        return ResponseEntity.ok(registeredUser);
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refreshToken(HttpServletRequest request,
                                                     HttpServletResponse response) {
