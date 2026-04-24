@@ -32,12 +32,14 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepos;
     private final JwtService jwtService;
+    private final EmailProducer emailProducer;
 
-    public AuthService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserRepository userRepos, JwtService jwtService) {
+    public AuthService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserRepository userRepos, JwtService jwtService, EmailProducer emailProducer) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepos = userRepos;
         this.jwtService = jwtService;
+        this.emailProducer = emailProducer;
     }
 
     @Transactional
@@ -72,6 +74,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         userRepos.save(user);
+        emailProducer.sendEmail(user.getEmail(), "WELCOME", "Welcome!");
         return user;
     }
 
