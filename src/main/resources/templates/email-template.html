@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General Reset */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; }
+
+        /* Main Container */
+        .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        /* Header with Gradient */
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 40px 20px; text-align: center; color: #ffffff; }
+        .header h1 { margin: 0; font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Body Content */
+        .body { padding: 40px 30px; color: #374151; line-height: 1.8; }
+        .body h2 { color: #111827; margin-bottom: 10px; font-size: 22px; }
+        .message-text { font-size: 16px; color: #4b5563; margin-bottom: 20px; }
+
+        /* Verification Code Box (Conditional) */
+        .code-box { background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 25px; text-align: center; margin: 30px 0; }
+        .code-label { font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+        .code-text { font-family: 'Courier New', Courier, monospace; font-size: 36px; font-weight: 800; color: #4f46e5; letter-spacing: 6px; }
+
+        /* Footer with Social Links */
+        .footer { background-color: #1f2937; padding: 35px 20px; text-align: center; color: #9ca3af; }
+        .links-title { color: #ffffff; font-weight: 600; margin-bottom: 15px; font-size: 14px; }
+        .social-link { color: #e5e7eb; text-decoration: none; margin: 5px 12px; font-size: 13px; display: inline-block; transition: color 0.3s; }
+        .social-link:hover { color: #818cf8; }
+
+        /* Copyright Section */
+        .copyright { font-size: 11px; margin-top: 25px; color: #6b7280; border-top: 1px solid #374151; padding-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1 th:text="${title}">NOTIFICATION</h1>
+    </div>
+
+    <!-- Body Content -->
+    <div class="body">
+        <h2 th:text="${title}">Hello!</h2>
+        <p class="message-text" th:text="${message}">We have an update for you.</p>
+        <!-- Add this inside the .body div, above the code-box or signature -->
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 10px;">
+            This email was sent to: <strong style="color: #4f46e5;" th:text="${userEmail}">user@example.com</strong>
+        </p>
+
+        <!-- Verification Code Section (Only shows if 'data' is passed) -->
+        <div th:if="${data}" class="code-box">
+            <div class="code-label">Verification Code</div>
+            <div class="code-text" th:text="${data}">000000</div>
+        </div>
+
+        <p style="margin-top: 30px;">Best regards,<br><strong>Abdellah Chatioui</strong></p>
+    </div>
+
+    <div class="footer">
+        <div class="links-title">Connect with me</div>
+
+        <div class="social-container" style="text-align: center;">
+
+            <!-- GitHub -->
+            <a href="https://github.com/abdellahchatioui" target="_blank"
+               style="text-decoration: none; display: inline-block; margin: 0 10px; color: #e0e0e0;">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png"
+                     width="20" height="20"
+                     style="vertical-align: middle;" alt="GitHub">
+                <span style="vertical-align: middle; margin-left: 5px;">GitHub</span>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/abdellah-chatioui-5b9426299/" target="_blank"
+               style="text-decoration: none; display: inline-block; margin: 0 10px; color: #e0e0e0;">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                     width="20" height="20"
+                     style="vertical-align: middle;" alt="LinkedIn">
+                <span style="vertical-align: middle; margin-left: 5px;">LinkedIn</span>
+            </a>
+
+            <!-- Medium -->
+            <a href="https://medium.com/@abdellahchatioui123" target="_blank"
+               style="text-decoration: none; display: inline-block; margin: 0 10px; color: #e0e0e0;">
+                <img src="https://cdn-icons-png.flaticon.com/512/5968/5968906.png"
+                     width="20" height="20"
+                     style="vertical-align: middle;" alt="Medium">
+                <span style="vertical-align: middle; margin-left: 5px;">Medium</span>
+            </a>
+
+            <!-- Portfolio -->
+            <a href="https://abdelahportfolio.byethost5.com/" target="_blank"
+               style="text-decoration: none; display: inline-block; margin: 0 10px; color: #e0e0e0;">
+                <img src="https://cdn-icons-png.flaticon.com/512/11476/11476369.png"
+                     width="20" height="20"
+                     style="vertical-align: middle;" alt="Portfolio">
+                <span style="vertical-align: middle; margin-left: 5px;">Portfolio</span>
+            </a>
+        </div>
+
+        <div class="copyright">
+            &copy; 2026 Abdellah Chatioui. All rights reserved.<br>
+            Built with Spring Boot
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
