@@ -4,6 +4,8 @@ import com.example.sb_auth_system.config.RabbitMQConfig;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,7 +21,8 @@ import java.util.Map;
 public class EmailConsumer {
 
     private final JavaMailSender mailSender;
-    private final TemplateEngine templateEngine; // Inject Thymeleaf engine
+    private final TemplateEngine templateEngine;
+    private static final Logger log = LoggerFactory.getLogger(EmailConsumer.class);
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE)
     public void consume(Map<String, String> payload) {
@@ -27,7 +30,6 @@ public class EmailConsumer {
         String type = payload.get("type");
         String data = payload.get("data");
 
-        // 1. Prepare Thymeleaf Context (the data for the HTML)
         Context context = new Context();
         String subject;
 
@@ -48,10 +50,8 @@ public class EmailConsumer {
             default: return;
         }
 
-        // 2. Process the template into a String
         String htmlContent = templateEngine.process("email-template", context);
 
-        // 3. Send the HTML email
         sendEmail(email, subject, htmlContent);
     }
 
@@ -62,11 +62,11 @@ public class EmailConsumer {
 
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(htmlBody, true); // true = isHtml
+            helper.setText(htmlBody, true);
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            // Log error
+            log.error("Failed to send email to: {} due to error: {}", to, e.getMessage());
         }
     }
 }
