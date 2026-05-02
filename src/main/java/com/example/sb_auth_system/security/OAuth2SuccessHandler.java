@@ -40,13 +40,33 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
 
         String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+
+        if (name == null || name.isBlank()) {
+            name = email.substring(0, email.indexOf("@"));
+        }
+
+        String finalName = name;
 
         Users user = userRepository.findByEmail(email)
+                .map(existingUser -> {
+
+                    // Update username only if missing
+                    if (existingUser.getUsername() == null || existingUser.getUsername().isBlank()) {
+                        existingUser.setUsername(finalName);
+                        userRepository.save(existingUser);
+                    }
+
+                    return existingUser;
+                })
                 .orElseGet(() -> {
+
                     Users newUser = new Users();
                     newUser.setEmail(email);
-                    newUser.setPassword("Oauth2"); // use a simple password just to pass the min length
+                    newUser.setPassword("oauth2_user");
                     newUser.setRole(Role.USER);
+                    newUser.setUsername(finalName);
+
                     return userRepository.save(newUser);
                 });
 
