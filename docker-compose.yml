@@ -24,3 +24,10 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
+
+  rabbitmq:
+      image: rabbitmq:3-management
+      container_name: sb_auth_rabbitmq
+      ports:
+        - "5672:5672"
+        - "15672:15672"
