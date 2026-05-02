@@ -19,9 +19,24 @@ public class Users {
     @Column(nullable = false)
     private  String password;
 
+    @Column(nullable = true)
+    private String username;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Users(String username) {
+        this.username = username;
+    }
 
     public Users(Integer id, String email, String password, Role role) {
         this.id = id;

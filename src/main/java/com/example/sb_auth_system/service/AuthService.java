@@ -1,5 +1,6 @@
 package com.example.sb_auth_system.service;
 
+import com.example.sb_auth_system.dto.EmailType;
 import com.example.sb_auth_system.dto.JwtResponse;
 import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.RefreshToken;
@@ -74,7 +75,12 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         userRepos.save(user);
-        emailProducer.sendEmail(user.getEmail(), "WELCOME", "Welcome!");
+        emailProducer.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                EmailType.WELCOME,
+                null
+        );
         return user;
     }
 

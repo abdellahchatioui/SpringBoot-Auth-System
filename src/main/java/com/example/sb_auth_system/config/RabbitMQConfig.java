@@ -4,7 +4,6 @@ import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 
 
