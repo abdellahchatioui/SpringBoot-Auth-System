@@ -10,21 +10,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
+    private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
-    public OAuth2SuccessHandler(RefreshTokenService refreshTokenService, UserRepository userRepository, JwtService jwtService) {
+    public OAuth2SuccessHandler(PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService, UserRepository userRepository, JwtService jwtService) {
+        this.passwordEncoder = passwordEncoder;
         this.refreshTokenService = refreshTokenService;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
@@ -63,7 +67,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
                     Users newUser = new Users();
                     newUser.setEmail(email);
-                    newUser.setPassword("oauth2_user");
+                    newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
                     newUser.setRole(Role.USER);
                     newUser.setUsername(finalName);
 
