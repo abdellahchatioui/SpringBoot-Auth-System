@@ -1,9 +1,11 @@
 package com.example.sb_auth_system.service;
 
 import com.example.sb_auth_system.config.RabbitMQConfig;
+import com.example.sb_auth_system.dto.EmailMessage;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,55 +20,18 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailConsumer {
 
-    private final JavaMailSender mailSender;
-    private final TemplateEngine templateEngine;
-    private static final Logger log = LoggerFactory.getLogger(EmailConsumer.class);
+    private final EmailService emailService;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE)
-    public void consume(Map<String, String> payload) {
-        String email = payload.get("email");
-        String type = payload.get("type");
-        String data = payload.get("data");
+    public void consume(EmailMessage message) {
 
-        Context context = new Context();
-        String subject;
-
-        switch (type) {
-            case "WELCOME":
-                subject = "Welcome!";
-                context.setVariable("title", "Welcome to the Platform!");
-                context.setVariable("userEmail", email);
-                context.setVariable("message", "We are thrilled to have you here.");
-                break;
-            case "VERIFY":
-                subject = "Your Verification Code";
-                context.setVariable("title", "Verify Your Identity");
-                context.setVariable("userEmail", email);
-                context.setVariable("message", "Please use the code below:");
-                context.setVariable("data", data);
-                break;
-            default: return;
-        }
-
-        String htmlContent = templateEngine.process("email-template", context);
-
-        sendEmail(email, subject, htmlContent);
-    }
-
-    private void sendEmail(String to, String subject, String htmlBody) {
         try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlBody, true);
-
-            mailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            log.error("Failed to send email to: {} due to error: {}", to, e.getMessage());
+            emailService.handleEmail(message);
+        } catch (Exception e) {
+            log.error("Failed to process email message: {}", message, e);
         }
     }
 }
