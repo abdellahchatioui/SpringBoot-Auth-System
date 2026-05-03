@@ -201,4 +201,14 @@ public class AuthService {
         return "Reset link sent";
     }
 
+    public String resetPassword(String token,String newPassword){
+        Integer userId = resetTokenService.validateToken(token);
+
+        Users user = userRepos.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepos.save(user);
+        return  "Password updated";
+    }
 }
