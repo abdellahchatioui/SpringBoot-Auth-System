@@ -182,4 +182,23 @@ public class AuthService {
         userRepos.save(user);
     }
 
+    public String forgotPassword(String email){
+        Users user = userRepos.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = resetTokenService.createToken(user.getId());
+
+        // Add link to ResetPassword frontend page with token
+        String link = "token=" + token;
+
+        emailProducer.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                EmailType.RESET_PASSWORD,
+                link
+        );
+
+        return "Reset link sent";
+    }
+
 }
