@@ -1,13 +1,8 @@
 package com.example.sb_auth_system.controller;
 
-import com.example.sb_auth_system.dto.JwtResponse;
-import com.example.sb_auth_system.dto.RefreshTokenRequest;
+import com.example.sb_auth_system.dto.auth.JwtResponse;
 import com.example.sb_auth_system.entity.Users;
-import com.example.sb_auth_system.repository.UserRepository;
-import com.example.sb_auth_system.service.AuthService;
-import com.example.sb_auth_system.service.RefreshTokenService;
-import com.example.sb_auth_system.service.ResetTokenService;
-import com.example.sb_auth_system.service.VerificationTokenService;
+import com.example.sb_auth_system.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

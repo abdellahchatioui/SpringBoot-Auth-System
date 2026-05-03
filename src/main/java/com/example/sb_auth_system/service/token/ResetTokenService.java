@@ -1,4 +1,4 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.service.token;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,11 +9,11 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class VerificationTokenService {
+public class ResetTokenService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    private static final String PREFIX = "verify:token:";
+    private static final String PREFIX = "reset:token:";
 
     public String createToken(Integer userId) {
         String token = UUID.randomUUID().toString();
@@ -21,7 +21,7 @@ public class VerificationTokenService {
         redisTemplate.opsForValue().set(
                 PREFIX + token,
                 userId.toString(),
-                Duration.ofMinutes(10)
+                Duration.ofMinutes(15)
         );
 
         return token;
@@ -31,7 +31,7 @@ public class VerificationTokenService {
         String userId = redisTemplate.opsForValue().get(PREFIX + token);
 
         if (userId == null) {
-            throw new RuntimeException("Invalid or expired token");
+            throw new RuntimeException("Invalid or expired reset token");
         }
 
         redisTemplate.delete(PREFIX + token);

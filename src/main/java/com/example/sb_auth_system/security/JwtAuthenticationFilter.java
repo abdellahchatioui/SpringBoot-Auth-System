@@ -1,7 +1,6 @@
 package com.example.sb_auth_system.security;
 
-import com.example.sb_auth_system.repository.UserRepository;
-import com.example.sb_auth_system.service.TokenBlacklistService;
+import com.example.sb_auth_system.service.token.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

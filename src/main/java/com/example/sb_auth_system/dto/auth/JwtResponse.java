@@ -1,4 +1,4 @@
-package com.example.sb_auth_system.dto;
+package com.example.sb_auth_system.dto.auth;
 
 public class JwtResponse {
     private String accessToken;

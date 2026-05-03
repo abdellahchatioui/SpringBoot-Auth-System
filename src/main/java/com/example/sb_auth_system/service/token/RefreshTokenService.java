@@ -1,9 +1,8 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.service.token;
 
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.repository.RefreshTokenRepository;
-import com.example.sb_auth_system.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
