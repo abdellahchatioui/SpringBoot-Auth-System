@@ -1,6 +1,6 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.messaging;
 
-import com.example.sb_auth_system.dto.EmailMessage;
+import com.example.sb_auth_system.dto.email.EmailMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

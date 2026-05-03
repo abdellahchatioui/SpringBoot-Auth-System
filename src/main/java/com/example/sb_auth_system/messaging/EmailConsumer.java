@@ -1,21 +1,11 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.messaging;
 
 import com.example.sb_auth_system.config.RabbitMQConfig;
-import com.example.sb_auth_system.dto.EmailMessage;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import com.example.sb_auth_system.dto.email.EmailMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-
-import java.util.Map;
 
 
 @Service

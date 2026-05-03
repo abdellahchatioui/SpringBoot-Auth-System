@@ -1,14 +1,18 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.service.auth;
 
-import com.example.sb_auth_system.dto.EmailType;
-import com.example.sb_auth_system.dto.JwtResponse;
-import com.example.sb_auth_system.dto.RefreshTokenRequest;
+import com.example.sb_auth_system.dto.email.EmailType;
+import com.example.sb_auth_system.dto.auth.JwtResponse;
 import com.example.sb_auth_system.entity.RefreshToken;
 import com.example.sb_auth_system.entity.Role;
 import com.example.sb_auth_system.entity.Users;
 import com.example.sb_auth_system.exception.ResourceNotFoundException;
+import com.example.sb_auth_system.messaging.EmailProducer;
 import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.security.JwtService;
+import com.example.sb_auth_system.service.token.RefreshTokenService;
+import com.example.sb_auth_system.service.token.ResetTokenService;
+import com.example.sb_auth_system.service.token.TokenBlacklistService;
+import com.example.sb_auth_system.service.token.VerificationTokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +29,7 @@ import java.util.Arrays;
 public class AuthService {
 
     @Autowired
-    private RefreshTokenService  refreshTokenService;
+    private RefreshTokenService refreshTokenService;
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
     @Autowired

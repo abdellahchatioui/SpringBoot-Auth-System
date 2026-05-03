@@ -1,4 +1,4 @@
-package com.example.sb_auth_system.service;
+package com.example.sb_auth_system.service.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
