@@ -28,6 +28,10 @@ public class AuthService {
     private RefreshTokenService  refreshTokenService;
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+    @Autowired
+    private ResetTokenService resetTokenService;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -74,6 +78,8 @@ public class AuthService {
     public Users register(Users user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+        user.setVerified(false);
+
         String email = user.getEmail();
         userRepos.save(user);
         if(user.getUsername() == null || user.getUsername().isEmpty()){
@@ -81,12 +87,18 @@ public class AuthService {
                     email.substring(0, email.indexOf("@"))
             );
         }
+
+        String token = verificationTokenService.createToken(user.getId());
+
+        String link = "http://localhost:8080/auth/verify?token=" + token;
+
         emailProducer.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
-                EmailType.WELCOME,
-                null
+                EmailType.VERIFY,
+                link
         );
+
         return user;
     }
 
