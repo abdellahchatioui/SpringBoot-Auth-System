@@ -3,8 +3,11 @@ package com.example.sb_auth_system.controller;
 import com.example.sb_auth_system.dto.JwtResponse;
 import com.example.sb_auth_system.dto.RefreshTokenRequest;
 import com.example.sb_auth_system.entity.Users;
+import com.example.sb_auth_system.repository.UserRepository;
 import com.example.sb_auth_system.service.AuthService;
 import com.example.sb_auth_system.service.RefreshTokenService;
+import com.example.sb_auth_system.service.ResetTokenService;
+import com.example.sb_auth_system.service.VerificationTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +22,6 @@ import java.io.IOException;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
     @Autowired
     AuthService authService;
 
@@ -62,6 +63,17 @@ public class AuthController {
                                          HttpServletResponse response) {
 
         return ResponseEntity.ok(authService.logout(request, response));
+    }
+
+    @GetMapping("/verify")
+    public String verify(@RequestParam String token) {
+        try {
+            authService.verify(token);
+            return "Your account has been verified successfully! You can now log in.";
+
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
 
