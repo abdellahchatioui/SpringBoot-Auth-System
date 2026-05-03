@@ -28,6 +28,10 @@ public class AuthService {
     private RefreshTokenService  refreshTokenService;
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+    @Autowired
+    private ResetTokenService resetTokenService;
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -74,6 +78,8 @@ public class AuthService {
     public Users register(Users user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+        user.setVerified(false);
+
         String email = user.getEmail();
         userRepos.save(user);
         if(user.getUsername() == null || user.getUsername().isEmpty()){
@@ -81,12 +87,18 @@ public class AuthService {
                     email.substring(0, email.indexOf("@"))
             );
         }
+
+        String token = verificationTokenService.createToken(user.getId());
+
+        String link = "http://localhost:8080/auth/verify?token=" + token;
+
         emailProducer.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
-                EmailType.WELCOME,
-                null
+                EmailType.VERIFY,
+                link
         );
+
         return user;
     }
 
@@ -154,5 +166,49 @@ public class AuthService {
         response.addCookie(cookie);
 
         return "Logged out";
+    }
+
+    public void verify(String token) {
+        Integer userId = verificationTokenService.validateToken(token);
+
+        if (userId == null) {
+            throw new RuntimeException("The link is invalid or has expired.");
+        }
+
+        Users user = userRepos.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+
+        user.setVerified(true);
+        userRepos.save(user);
+    }
+
+    public String forgotPassword(String email){
+        Users user = userRepos.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = resetTokenService.createToken(user.getId());
+
+        // Add link to ResetPassword frontend page with token
+        String link = "token=" + token;
+
+        emailProducer.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                EmailType.RESET_PASSWORD,
+                link
+        );
+
+        return "Reset link sent";
+    }
+
+    public String resetPassword(String token,String newPassword){
+        Integer userId = resetTokenService.validateToken(token);
+
+        Users user = userRepos.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepos.save(user);
+        return  "Password updated";
     }
 }

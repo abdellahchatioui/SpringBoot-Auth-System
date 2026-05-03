@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -34,8 +35,7 @@ public class SecurityConfig {
     @Autowired
     JwtAuthenticationFilter jwtAuthFilter;
     @Autowired
-    OAuth2SuccessHandler successHandler;
-
+    @Lazy OAuth2SuccessHandler successHandler;  
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
