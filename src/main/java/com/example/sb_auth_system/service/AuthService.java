@@ -167,4 +167,19 @@ public class AuthService {
 
         return "Logged out";
     }
+
+    public void verify(String token) {
+        Integer userId = verificationTokenService.validateToken(token);
+
+        if (userId == null) {
+            throw new RuntimeException("The link is invalid or has expired.");
+        }
+
+        Users user = userRepos.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+
+        user.setVerified(true);
+        userRepos.save(user);
+    }
+
 }
