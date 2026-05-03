@@ -23,6 +23,9 @@ public class Users {
     private String username;
 
     @Column(nullable = false)
+    private Boolean  isVerified = false;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -34,14 +37,12 @@ public class Users {
         this.username = username;
     }
 
-    public Users(String username) {
-        this.username = username;
-    }
-
-    public Users(Integer id, String email, String password, Role role) {
+    public Users(Integer id, String email, String password,String username, Boolean isVerified,Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.username = username;
+        this.isVerified = isVerified;
         this.role = role;
     }
 
@@ -81,4 +82,11 @@ public class Users {
         this.role = role;
     }
 
+    public Boolean getVerified() {
+        return isVerified != null ? isVerified : false; // Safe check
+    }
+
+    public void setVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
+    }
 }

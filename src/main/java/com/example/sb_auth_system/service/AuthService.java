@@ -74,7 +74,13 @@ public class AuthService {
     public Users register(Users user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+        String email = user.getEmail();
         userRepos.save(user);
+        if(user.getUsername() == null || user.getUsername().isEmpty()){
+            user.setUsername(
+                    email.substring(0, email.indexOf("@"))
+            );
+        }
         emailProducer.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
